@@ -41,7 +41,6 @@ function purchaseItem() {
                 console.log("Sorry that is not a valid ID!")
             }
         })
-        connection.end();
     });
 }
 
@@ -54,7 +53,6 @@ function quantityCheck(item) {
     }).then(function(response) {
         if (item.stock_quantity >= response.quantity) {
             var updatedQuantity = item.stock_quantity - response.quantity;
-            console.log(updatedQuantity);
             var query = connection.query(
                 "UPDATE products SET stock_quantity =? WHERE item_id =?", 
             [
@@ -63,10 +61,12 @@ function quantityCheck(item) {
             ],
             function(err, res) {
                 console.log("Your total purchase was $" + response.quantity * item.price);
+                connection.end();
             })
         }
         else {
             console.log("Sorry insufficient quantity!");
+            connection.end();
         }
     })
 }
